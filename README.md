@@ -8,7 +8,7 @@ A local Home Assistant integration for the Zigma Spark 980 Free running the **v1
 | --- | --- |
 | Start, resume, pause, and dock | Vacuum entity and individual action buttons |
 | Choose suction strength for the next clean | Select entity with Quiet, Normal, and Maximum levels |
-| See the full floor plan while the robot is working | Live camera with the driven route, dock, and robot marker |
+| See the full floor plan while the robot is working | Tightly framed transparent PNG with route, dock, and robot marker |
 | Check battery, status, errors, and telemetry freshness | Native sensors |
 | Inspect or enable supported robot schedules | Schedule sensor and switches for schedules exposed by the API |
 
@@ -33,11 +33,13 @@ The repository includes a reusable [map-first dashboard template](dashboards/spa
 3. Create a new dashboard, open its raw configuration editor, and paste in `dashboards/sparky-dashboard.yaml`.
 4. Replace every `replace_me` entity ID with the matching ID from your installation, then save.
 
-The template uses standard Home Assistant cards for the map, status, battery, suction selector, and diagnostics. It uses `button-card` for the four large, colored actions; starting a clean and docking both ask for confirmation. `auto-entities` adds schedule switches automatically when the robot exposes schedules, so the dashboard does not need a hard-coded entity ID for each one. The dashboard can be restyled without changing the integration itself.
+The template uses standard Home Assistant cards for the map, status, battery, suction selector, and diagnostics. Its map overlays Pause and Dock controls; the map darkens automatically when Home Assistant is in dark mode. `button-card` styles the four large, colored actions; starting a clean and docking both ask for confirmation. `auto-entities` adds schedule switches automatically when the robot exposes schedules, so the dashboard does not need a hard-coded entity ID for each one. The dashboard can be restyled without changing the integration itself.
+
+For a compact live map on an existing dashboard, copy the [Sparky live section](dashboards/sparky-live-section.yaml) into that dashboard view's `sections` list. It appears while the vacuum is cleaning or returning to its dock and overlays Pause and Dock buttons on the camera image.
 
 ## Live map
 
-The camera follows the robot website's clean map style: a complete, centered floor plan, a fine dashed route, and clear dock and robot markers. Its frame expands to include reported route or robot coordinates outside the map grid. Fresh laser data is used to position the robot when it aligns with the active map; raw laser returns are not drawn over the floor plan.
+The camera follows the robot website's clean map style: a complete floor plan, a fine dashed route, and clear dock and robot markers. The PNG is cropped to the map and reported overlays, with transparent unknown areas instead of a large dotted white border. Its frame expands to include route or robot coordinates outside the map grid. Fresh laser data is used to position the robot when it aligns with the active map; raw laser returns are not drawn over the floor plan.
 
 The camera refreshes map and status data every 2.5 seconds and checks the laser endpoint every second while Home Assistant requests frames. The image is assembled from API snapshots; it is not a video stream. When the robot API only has a cached path position, the marker reflects that estimate and may not include a heading.
 
