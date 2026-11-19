@@ -6,7 +6,7 @@ from typing import Any
 
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
@@ -29,14 +29,30 @@ async def async_setup_entry(
         return
     host, port = str(entry.data[CONF_HOST]), int(entry.data[CONF_PORT])
     robot_name = str(status.data.get("robot") or "Zigma Free robot")
-    jobs = schedules.data.get("items", [])
-    async_add_entities(
-        ZigmaScheduleSwitch(schedules, host, port, robot_name, job)
-        for job in jobs
-        if isinstance(job, dict)
-        and str(job.get("action") or "clean") in _SAFE_SCHEDULE_ACTIONS
-        and job.get("id") is not None
-    )
+    added_ids: set[str] = set()
+
+    @callback
+    def add_schedule_entities() -> None:
+        """Add controls when schedules are created on the robot later."""
+        jobs = (schedules.data or {}).get("items", [])
+        entities = []
+        for job in jobs:
+            if (
+                not isinstance(job, dict)
+                or str(job.get("action") or "clean") not in _SAFE_SCHEDULE_ACTIONS
+                or job.get("id") is None
+            ):
+                continue
+            schedule_id = str(job["id"])
+            if schedule_id in added_ids:
+                continue
+            added_ids.add(schedule_id)
+            entities.append(ZigmaScheduleSwitch(schedules, host, port, robot_name, job))
+        if entities:
+            async_add_entities(entities)
+
+    entry.async_on_unload(schedules.async_add_listener(add_schedule_entities))
+    add_schedule_entities()
 
 
 class ZigmaScheduleSwitch(CoordinatorEntity[ZigmaSchedulesCoordinator], SwitchEntity):
