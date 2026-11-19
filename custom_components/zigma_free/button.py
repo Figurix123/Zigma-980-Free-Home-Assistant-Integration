@@ -52,5 +52,11 @@ class ZigmaCommandButton(ZigmaEntity, ButtonEntity):
 
     async def async_press(self) -> None:
         """Send the command associated with this button."""
-        await self.coordinator.api.async_send_command(self.entity_description.key)
+        action = self.entity_description.key
+        if action == "clean":
+            await self.coordinator.api.async_send_command(
+                action, fan_power=self.coordinator.fan_power
+            )
+        else:
+            await self.coordinator.api.async_send_command(action)
         await self.coordinator.async_request_refresh()
