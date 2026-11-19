@@ -36,15 +36,60 @@ views:
             heading: Live-Karte
             heading_style: title
             icon: mdi:map-outline
-          - type: picture-entity
-            entity: camera.replace_me_map
+          - type: picture-elements
+            camera_image: camera.replace_me_map
             camera_view: live
-            show_name: false
-            show_state: false
-            fit_mode: contain
+            dark_mode_filter: "invert(0.92) hue-rotate(180deg)"
             grid_options:
               columns: full
               rows: 11
+            elements:
+              - type: icon
+                icon: mdi:pause-circle-outline
+                title: Pause
+                tap_action:
+                  action: perform-action
+                  perform_action: button.press
+                  target:
+                    entity_id: button.replace_me_pause
+                style:
+                  top: 14px
+                  right: 64px
+                  left: auto
+                  transform: none
+                  width: 44px
+                  height: 44px
+                  display: flex
+                  align-items: center
+                  justify-content: center
+                  border-radius: 50%
+                  background: rgba(20, 28, 34, 0.82)
+                  color: white
+                  --mdc-icon-size: 25px
+              - type: icon
+                icon: mdi:home-map-marker
+                title: Zur Station
+                tap_action:
+                  action: perform-action
+                  perform_action: button.press
+                  target:
+                    entity_id: button.replace_me_dock
+                  confirmation:
+                    text: Sparky zurück zur Ladestation schicken?
+                style:
+                  top: 14px
+                  right: 14px
+                  left: auto
+                  transform: none
+                  width: 44px
+                  height: 44px
+                  display: flex
+                  align-items: center
+                  justify-content: center
+                  border-radius: 50%
+                  background: rgba(20, 28, 34, 0.82)
+                  color: white
+                  --mdc-icon-size: 25px
 
       - type: grid
         cards:
