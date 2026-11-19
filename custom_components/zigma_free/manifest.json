@@ -1,7 +1,7 @@
 {
   "domain": "zigma_free",
   "name": "Zigma Free",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "documentation": "https://github.com/Figurix123/Zigma-980-Free-Home-Assistant-Integration",
   "issue_tracker": "https://github.com/Figurix123/Zigma-980-Free-Home-Assistant-Integration/issues",
   "codeowners": ["@Figurix123"],
