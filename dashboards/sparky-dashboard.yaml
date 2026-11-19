@@ -80,7 +80,7 @@ views:
                     - padding: 16px
                     - border-radius: 22px
                     - border: 1px solid rgba(255, 255, 255, 0.35)
-                    - background: linear-gradient(145deg, '#118477', '#17614f')
+                    - "background: linear-gradient(145deg, #118477, #17614f)"
                     - box-shadow: 0 8px 22px rgba(17, 100, 83, 0.20)
                   grid:
                     - grid-template-areas: '"i" "n" "l"'
@@ -121,7 +121,7 @@ views:
                     - padding: 16px
                     - border-radius: 22px
                     - border: 1px solid rgba(255, 255, 255, 0.35)
-                    - background: linear-gradient(145deg, '#397ad0', '#28549a')
+                    - "background: linear-gradient(145deg, #397ad0, #28549a)"
                     - box-shadow: 0 8px 22px rgba(42, 89, 155, 0.18)
                   grid:
                     - grid-template-areas: '"i" "n" "l"'
@@ -162,7 +162,7 @@ views:
                     - padding: 16px
                     - border-radius: 22px
                     - border: 1px solid rgba(255, 255, 255, 0.35)
-                    - background: linear-gradient(145deg, '#d99134', '#a85b18')
+                    - "background: linear-gradient(145deg, #d99134, #a85b18)"
                     - box-shadow: 0 8px 22px rgba(173, 105, 32, 0.18)
                   grid:
                     - grid-template-areas: '"i" "n" "l"'
@@ -205,7 +205,7 @@ views:
                     - padding: 16px
                     - border-radius: 22px
                     - border: 1px solid rgba(255, 255, 255, 0.35)
-                    - background: linear-gradient(145deg, '#596a83', '#354156')
+                    - "background: linear-gradient(145deg, #596a83, #354156)"
                     - box-shadow: 0 8px 22px rgba(51, 65, 85, 0.20)
                   grid:
                     - grid-template-areas: '"i" "n" "l"'
