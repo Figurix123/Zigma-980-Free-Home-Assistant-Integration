@@ -1,0 +1,72 @@
+# Add this section under a view's `sections:` list on your main dashboard.
+# Replace every `replace_me` entity ID with the matching entity in your HA.
+# It is hidden while the robot is docked, paused, or idle.
+- type: grid
+  visibility:
+    - condition: or
+      conditions:
+        - condition: state
+          entity: vacuum.replace_me_vacuum
+          state: cleaning
+        - condition: state
+          entity: vacuum.replace_me_vacuum
+          state: returning
+  cards:
+    - type: heading
+      heading: Sparky live
+      heading_style: title
+      icon: mdi:robot-vacuum
+    - type: picture-elements
+      camera_image: camera.replace_me_map
+      camera_view: live
+      dark_mode_filter: "invert(0.92) hue-rotate(180deg)"
+      grid_options:
+        columns: full
+        rows: 10
+      elements:
+        - type: icon
+          icon: mdi:pause-circle-outline
+          title: Pause
+          tap_action:
+            action: perform-action
+            perform_action: button.press
+            target:
+              entity_id: button.replace_me_pause
+          style:
+            top: 14px
+            right: 64px
+            left: auto
+            transform: none
+            width: 44px
+            height: 44px
+            display: flex
+            align-items: center
+            justify-content: center
+            border-radius: 50%
+            background: rgba(20, 28, 34, 0.82)
+            color: white
+            --mdc-icon-size: 25px
+        - type: icon
+          icon: mdi:home-map-marker
+          title: Zur Station
+          tap_action:
+            action: perform-action
+            perform_action: button.press
+            target:
+              entity_id: button.replace_me_dock
+            confirmation:
+              text: Sparky zurück zur Ladestation schicken?
+          style:
+            top: 14px
+            right: 14px
+            left: auto
+            transform: none
+            width: 44px
+            height: 44px
+            display: flex
+            align-items: center
+            justify-content: center
+            border-radius: 50%
+            background: rgba(20, 28, 34, 0.82)
+            color: white
+            --mdc-icon-size: 25px
