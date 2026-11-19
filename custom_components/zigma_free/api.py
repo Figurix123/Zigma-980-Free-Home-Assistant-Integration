@@ -33,10 +33,9 @@ class ZigmaLocalApi:
     async def _request(
         self, method: str, path: str, payload: dict[str, Any] | None = None
     ) -> dict[str, Any]:
-        headers = dict(self._headers)
+        headers = {**self._headers, "X-Zigma-Request": "1"}
         kwargs: dict[str, Any] = {"headers": headers, "timeout": aiohttp.ClientTimeout(total=8)}
         if payload is not None:
-            headers["X-Zigma-Request"] = "1"
             kwargs["json"] = payload
         try:
             async with self._session.request(
@@ -66,8 +65,12 @@ class ZigmaLocalApi:
         return await self._request("GET", "/api/status")
 
     async def async_get_map(self) -> dict[str, Any]:
-        """Fetch the current on-demand map snapshot."""
+        """Fetch the current map grid."""
         return await self._request("GET", "/api/map")
+
+    async def async_get_laser(self) -> dict[str, Any]:
+        """Fetch the robot's current 360-degree laser scan."""
+        return await self._request("GET", "/api/laser")
 
     async def async_get_schedules(self) -> dict[str, Any]:
         """Fetch the robot's configured schedules."""
