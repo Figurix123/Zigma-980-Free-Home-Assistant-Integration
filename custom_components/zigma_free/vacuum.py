@@ -72,7 +72,12 @@ class ZigmaVacuum(ZigmaEntity, StateVacuumEntity):
     async def async_start(self, **kwargs: Any) -> None:
         """Start a clean or resume a paused clean."""
         action = "resume" if self.activity == VacuumActivity.PAUSED else "clean"
-        await self.coordinator.api.async_send_command(action)
+        if action == "clean":
+            await self.coordinator.api.async_send_command(
+                action, fan_power=self.coordinator.fan_power
+            )
+        else:
+            await self.coordinator.api.async_send_command(action)
         await self.coordinator.async_request_refresh()
 
     async def async_pause(self) -> None:
