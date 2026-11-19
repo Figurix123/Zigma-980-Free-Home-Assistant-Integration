@@ -76,6 +76,16 @@ class ZigmaLocalApi:
         """Fetch the robot's configured schedules."""
         return await self._request("GET", "/api/schedules")
 
+    async def async_get_settings(self) -> dict[str, Any]:
+        """Fetch editable robot settings, including speaker volume."""
+        return await self._request("GET", "/api/settings")
+
+    async def async_set_setting(self, action: str, value: Any) -> dict[str, Any]:
+        """Change one setting through the robot's validated settings API."""
+        return await self._request(
+            "PUT", "/api/settings", {"action": action, "value": value}
+        )
+
     async def async_put_schedules(self, items: list[dict[str, Any]]) -> dict[str, Any]:
         """Replace schedules with the supplied validated schedule list."""
         return await self._request("PUT", "/api/schedules", {"items": items})

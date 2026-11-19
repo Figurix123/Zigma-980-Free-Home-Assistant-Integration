@@ -316,6 +316,15 @@ views:
                 style: dropdown
             grid_options:
               columns: full
+          - type: tile
+            entity: number.replace_me_speaker_volume
+            name: Lautstärke
+            icon: mdi:volume-high
+            features:
+              - type: numeric-input
+                style: slider
+            grid_options:
+              columns: full
 
   - title: Details
     path: details

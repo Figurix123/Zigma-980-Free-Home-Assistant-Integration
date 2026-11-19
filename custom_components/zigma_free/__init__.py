@@ -19,7 +19,11 @@ from .const import (
     DOMAIN,
     PLATFORMS,
 )
-from .coordinator import ZigmaSchedulesCoordinator, ZigmaStatusCoordinator
+from .coordinator import (
+    ZigmaSchedulesCoordinator,
+    ZigmaSettingsCoordinator,
+    ZigmaStatusCoordinator,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -57,6 +61,16 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # A schedule endpoint failure must not take the working vacuum offline.
         _LOGGER.warning("Could not read robot schedules: %s", err)
     coordinator.schedule_coordinator = schedules
+
+    settings = ZigmaSettingsCoordinator(hass, api)
+    try:
+        await settings.async_config_entry_first_refresh()
+    except ConfigEntryAuthFailed:
+        raise
+    except Exception as err:
+        # Optional settings must not prevent working cleaning controls from loading.
+        _LOGGER.warning("Could not read robot settings: %s", err)
+    coordinator.settings_coordinator = settings
 
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)

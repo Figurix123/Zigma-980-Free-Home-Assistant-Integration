@@ -29,11 +29,33 @@ class ZigmaStatusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         )
         self.api = api
         self.schedule_coordinator: ZigmaSchedulesCoordinator | None = None
+        self.settings_coordinator: ZigmaSettingsCoordinator | None = None
         self.fan_power = DEFAULT_FAN_POWER
 
     async def _async_update_data(self) -> dict[str, Any]:
         try:
             return await self.api.async_get_status()
+        except ZigmaAuthenticationError as err:
+            raise ConfigEntryAuthFailed("Robot access key rejected") from err
+        except ZigmaApiError as err:
+            raise UpdateFailed(str(err)) from err
+
+
+class ZigmaSettingsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
+    """Poll settings separately from the more frequently changing status."""
+
+    def __init__(self, hass: HomeAssistant, api: ZigmaLocalApi) -> None:
+        super().__init__(
+            hass,
+            logger=logging.getLogger(__name__),
+            name=f"{DOMAIN} settings",
+            update_interval=timedelta(minutes=1),
+        )
+        self.api = api
+
+    async def _async_update_data(self) -> dict[str, Any]:
+        try:
+            return await self.api.async_get_settings()
         except ZigmaAuthenticationError as err:
             raise ConfigEntryAuthFailed("Robot access key rejected") from err
         except ZigmaApiError as err:

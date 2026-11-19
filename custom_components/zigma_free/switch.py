@@ -25,7 +25,7 @@ async def async_setup_entry(
     """Create switches for supported existing schedules."""
     status: ZigmaStatusCoordinator = hass.data[DOMAIN][entry.entry_id]
     schedules = status.schedule_coordinator
-    if schedules is None or not schedules.data:
+    if schedules is None:
         return
     host, port = str(entry.data[CONF_HOST]), int(entry.data[CONF_PORT])
     robot_name = str(status.data.get("robot") or "Zigma Free robot")
@@ -35,6 +35,8 @@ async def async_setup_entry(
     def add_schedule_entities() -> None:
         """Add controls when schedules are created on the robot later."""
         jobs = (schedules.data or {}).get("items", [])
+        if not isinstance(jobs, list):
+            return
         entities = []
         for job in jobs:
             if (

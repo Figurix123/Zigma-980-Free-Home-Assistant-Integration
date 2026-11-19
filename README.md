@@ -8,6 +8,7 @@ A local Home Assistant integration for the Zigma Spark 980 Free running the **v1
 | --- | --- |
 | Start, resume, pause, and dock | Vacuum entity and individual action buttons |
 | Choose suction strength for the next clean | Select entity with Quiet, Normal, and Maximum levels |
+| Set the robot's speaker volume | Number entity with a 0–100 slider |
 | See the full floor plan while the robot is working | Tightly framed transparent PNG with route, dock, and robot marker |
 | Check battery, status, errors, and telemetry freshness | Native sensors |
 | Inspect or enable supported robot schedules | Schedule sensor and switches for schedules exposed by the API |
@@ -33,7 +34,7 @@ The repository includes a reusable [map-first dashboard template](dashboards/spa
 3. Create a new dashboard, open its raw configuration editor, and paste in `dashboards/sparky-dashboard.yaml`.
 4. Replace every `replace_me` entity ID with the matching ID from your installation, then save.
 
-The template uses standard Home Assistant cards for the map, status, battery, suction selector, and diagnostics. Its map overlays Pause and Dock controls; the map darkens automatically when Home Assistant is in dark mode. `button-card` styles the four large, colored actions; starting a clean and docking both ask for confirmation. `auto-entities` adds schedule switches automatically when the robot exposes schedules, so the dashboard does not need a hard-coded entity ID for each one. The dashboard can be restyled without changing the integration itself.
+The template uses standard Home Assistant cards for the map, status, battery, suction selector, speaker volume, and diagnostics. Its map overlays clearly labeled Pause and Dock controls; the map darkens automatically when Home Assistant is in dark mode. `button-card` styles the four large, colored actions; starting a clean and docking both ask for confirmation. `auto-entities` adds schedule switches automatically when the robot exposes schedules, so the dashboard does not need a hard-coded entity ID for each one. The dashboard can be restyled without changing the integration itself.
 
 For a live map on an existing dashboard, copy the [Sparky live section](dashboards/sparky-live-section.yaml) into that dashboard view's `sections` list. It appears while the vacuum is cleaning or returning to its dock, overlays clearly labeled Pause and Dock buttons on the map, and groups status, battery, and cleaning time beside it on wider screens. The map keeps the generated PNG's portrait aspect ratio so the full floor plan stays visible as the dashboard changes width.
 
@@ -47,7 +48,8 @@ The camera refreshes map and status data every 2.5 seconds and checks the laser 
 
 - The vacuum entity exposes Home Assistant's standard vacuum controls. Separate buttons are available for Clean, Resume, Pause, and Dock.
 - The suction selector saves the level for the **next full clean**. The API does not support changing suction power during an active clean.
-- Schedule entities reflect schedules already exposed by the robot API. Home Assistant can enable or disable supported schedules; schedule creation and time editing are not available through this API.
+- The speaker-volume number changes the robot's voice volume using its local settings API.
+- Schedule entities reflect schedules already exposed by the robot API. This integration can enable or disable supported schedules; create and edit schedules through the robot's web interface.
 - A successful command response means the robot accepted the request for processing. It does not confirm that the robot physically completed the action.
 
 ## Connection and privacy
@@ -58,7 +60,7 @@ The camera refreshes map and status data every 2.5 seconds and checks the laser 
 
 ## Current limits
 
-Room and area cleaning, stop, locate, schedule editing, and changing suction power during a clean are not implemented. The API's cleaning-area value has no verified unit. Map and pose freshness depend on the snapshots the robot exposes.
+This integration does not yet expose saved-map management, map-based area selection, direct navigation to a point, cleaning-history reports, voice-prompt files, or schedule creation and editing. Suction strength cannot be changed during an active clean. Pause is the supported stop-like action in the robot API. Live map detail and robot-position accuracy depend on the snapshots the robot currently reports.
 
 ## Source
 
