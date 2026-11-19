@@ -8,8 +8,10 @@ Local Home Assistant integration for Zigma Spark 980 Free robots running the v1.
 - Status polling every 10 seconds.
 - Vacuum controls plus explicit Clean, Resume, Pause, and Dock buttons.
 - Battery, cleaning time, raw cleaning-area value, native status, error, and telemetry freshness sensors.
+- An on-demand map camera with the cached path and dock marker. Map requests are rate-limited with a 20-second image cache.
+- A schedules diagnostic sensor and switches to enable or disable existing clean, dock, and song schedules. Schedule metadata refreshes every five minutes.
 
-The command API confirms that a command was queued; it does not confirm that the robot physically completed it. The cleaning-area sensor intentionally has no unit because the API's native area unit has not been verified. Maps and LiDAR are not polled.
+The command API confirms that a command was queued; it does not confirm that the robot physically completed it. The cleaning-area sensor intentionally has no unit because the API's native area unit has not been verified. Map cells are shown as a snapshot; their occupancy meaning, age, and coordinate resolution are not fully specified by the API. This is not a continuous video stream. Schedule switches only enable or disable an existing supported schedule; they do not run it immediately or edit its time.
 
 ## Install with HACS
 
@@ -26,7 +28,7 @@ This repository is a custom HACS repository and is not part of the default HACS 
 - The robot's local HTTP agent must be reachable from the Home Assistant host.
 - API traffic uses plain HTTP on the local network; keep the access key private and do not expose port `8765` to the internet.
 - API behavior was derived from the v1.1-rc10 release and matching source tag. This integration has not yet been runtime-tested against a physical robot.
-- Map display, LiDAR, room cleaning, area cleaning, forbidden zones, locate, stop, and live fan-speed changes are not implemented.
+- LiDAR, room cleaning, area cleaning, forbidden zones, locate, stop, schedule editing, and live fan-speed changes are not implemented.
 
 ## Source
 

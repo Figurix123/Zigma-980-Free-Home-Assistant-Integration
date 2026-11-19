@@ -65,6 +65,18 @@ class ZigmaLocalApi:
         """Fetch robot status."""
         return await self._request("GET", "/api/status")
 
+    async def async_get_map(self) -> dict[str, Any]:
+        """Fetch the current on-demand map snapshot."""
+        return await self._request("GET", "/api/map")
+
+    async def async_get_schedules(self) -> dict[str, Any]:
+        """Fetch the robot's configured schedules."""
+        return await self._request("GET", "/api/schedules")
+
+    async def async_put_schedules(self, items: list[dict[str, Any]]) -> dict[str, Any]:
+        """Replace schedules with the supplied validated schedule list."""
+        return await self._request("PUT", "/api/schedules", {"items": items})
+
     async def async_send_command(self, action: str, **parameters: Any) -> dict[str, Any]:
         """Dispatch an action; success means accepted by the local agent."""
         return await self._request(
