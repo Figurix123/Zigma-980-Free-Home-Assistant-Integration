@@ -14,7 +14,7 @@ from homeassistant.helpers.update_coordinator import (
 )
 
 from .api import ZigmaApiError, ZigmaAuthenticationError, ZigmaLocalApi
-from .const import DEFAULT_SCAN_INTERVAL, DOMAIN
+from .const import DEFAULT_FAN_POWER, DEFAULT_SCAN_INTERVAL, DOMAIN
 
 
 class ZigmaStatusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
@@ -29,6 +29,7 @@ class ZigmaStatusCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         )
         self.api = api
         self.schedule_coordinator: ZigmaSchedulesCoordinator | None = None
+        self.fan_power = DEFAULT_FAN_POWER
 
     async def _async_update_data(self) -> dict[str, Any]:
         try:
