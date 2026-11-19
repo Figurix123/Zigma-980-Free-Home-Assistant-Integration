@@ -1,35 +1,51 @@
-# Zigma Free for Home Assistant
+# Zigma Spark 980 Free for Home Assistant
 
-Local Home Assistant integration for Zigma Spark 980 Free robots running the v1.1-rc10 deployment.
+A local Home Assistant integration for the Zigma Spark 980 Free running the **v1.1-rc10** deployment. It connects to the robot's HTTP agent on your home network and adds native vacuum controls, sensors, schedules, and a live map.
 
-## Features
+## What you get
 
-- Local HTTP connection to the robot on port `8765` using its web access key.
-- Status polling every 10 seconds.
-- Vacuum controls plus explicit Clean, Resume, Pause, and Dock buttons.
-- A suction power selector (levels 1–3: Quiet, Normal, Full) used by the next full clean, with its choice saved in Home Assistant.
-- Battery, cleaning time, raw cleaning-area value, native status, error, and telemetry freshness sensors.
-- A near-live, website-style map camera with the complete map, dashed driven path, dock marker, and robot position. The square view keeps the full floor plan visible and expands to include a path or robot position just beyond the map grid. The camera uses a fresh, map-aligned laser pose when available, but does not paint raw laser returns over the floor plan. It requests `/api/laser` once per second and refreshes `/api/status` plus `/api/map` every 2.5 seconds, matching the robot website's cadence.
-- A schedules diagnostic sensor and switches to enable or disable existing clean, dock, and song schedules. Schedule metadata refreshes every five minutes.
+| Feature | Home Assistant entity or view |
+| --- | --- |
+| Start, resume, pause, and dock | Vacuum entity and individual action buttons |
+| Choose suction strength for the next clean | Select entity with Quiet, Normal, and Maximum levels |
+| See the full floor plan while the robot is working | Live camera with the driven route, dock, and robot marker |
+| Check battery, status, errors, and telemetry freshness | Native sensors |
+| Inspect or enable supported robot schedules | Schedule sensor and switches for schedules exposed by the API |
 
-The command API confirms that a command was queued; it does not confirm that the robot physically completed it. The cleaning-area sensor intentionally has no unit because the API's native area unit has not been verified. Map cells use the same palette as the robot website; their physical occupancy meaning is not fully specified by the API. Live navigation poses are matched to the current map identity, dimensions, and origin. Map and pose freshness still depend on the robot API snapshots. This is a near-live image feed assembled from API snapshots, not HLS/WebRTC video. The API exposes suction power values 1–3 with a full-clean command; the selector sets the level for the next full clean and cannot change power mid-clean. Schedule switches only enable or disable an existing supported schedule; they do not run it immediately or edit its time.
+The included **Sparky** dashboard uses a responsive, map-first layout. It puts operating status and battery level above the map, with color-coded cleaning controls, suction selection, diagnostics, and schedule details alongside it.
 
-## Install with HACS
+## Install
 
-1. In HACS, open the three-dot menu and choose **Custom repositories**.
+1. In Home Assistant, open **HACS → Integrations → ⋮ → Custom repositories**.
 2. Add `Figurix123/Zigma-980-Free-Home-Assistant-Integration` with category **Integration**.
-3. Download **Zigma Free** in HACS and restart Home Assistant.
-4. In **Settings → Devices & services**, add **Zigma Free**.
-5. Enter the robot's LAN IP address, port `8765`, and web access key.
+3. Download **Zigma Free**, then restart Home Assistant.
+4. Open **Settings → Devices & services → Add integration** and choose **Zigma Free**.
+5. Enter the robot's local IP address, port `8765`, and web access key.
 
-This repository is a custom HACS repository and is not part of the default HACS catalog.
+This is a custom HACS repository; it is not part of the default HACS catalog.
 
-## Requirements and limits
+## Live map
 
-- The robot's local HTTP agent must be reachable from the Home Assistant host.
-- API traffic uses plain HTTP on the local network; keep the access key private and do not expose port `8765` to the internet.
-- Status, map, and live laser reads have been verified against a running robot. A queued command response still does not confirm that the robot physically completed that command.
-- LiDAR controls, room cleaning, area cleaning, forbidden zones, locate, stop, schedule editing, and changing suction power during an active clean are not implemented.
+The camera follows the robot website's clean map style: a complete, centered floor plan, a fine dashed route, and clear dock and robot markers. Its frame expands to include reported route or robot coordinates outside the map grid. Fresh laser data is used to position the robot when it aligns with the active map; raw laser returns are not drawn over the floor plan.
+
+The camera refreshes map and status data every 2.5 seconds and checks the laser endpoint every second while Home Assistant requests frames. The image is assembled from API snapshots; it is not a video stream. When the robot API only has a cached path position, the marker reflects that estimate and may not include a heading.
+
+## How controls behave
+
+- The vacuum entity exposes Home Assistant's standard vacuum controls. Separate buttons are available for Clean, Resume, Pause, and Dock.
+- The suction selector saves the level for the **next full clean**. The API does not support changing suction power during an active clean.
+- Schedule entities reflect schedules already exposed by the robot API. Home Assistant can enable or disable supported schedules; schedule creation and time editing are not available through this API.
+- A successful command response means the robot accepted the request for processing. It does not confirm that the robot physically completed the action.
+
+## Connection and privacy
+
+- Home Assistant must be able to reach the robot on the local network. Remote access to Home Assistant alone does not provide a route to the robot's private IP address.
+- API traffic uses plain HTTP on the local network. Keep the web access key private and do not expose the robot's API port to the internet.
+- The integration communicates directly with the robot; it does not send robot data through a project cloud service.
+
+## Current limits
+
+Room and area cleaning, stop, locate, schedule editing, and changing suction power during a clean are not implemented. The API's cleaning-area value has no verified unit. Map and pose freshness depend on the snapshots the robot exposes.
 
 ## Source
 
