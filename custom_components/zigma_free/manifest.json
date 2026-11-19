@@ -1,0 +1,12 @@
+{
+  "domain": "zigma_free",
+  "name": "Zigma Free",
+  "version": "0.1.0",
+  "documentation": "https://github.com/Figurix123/Zigma-980-Free-Home-Assistant-Integration",
+  "issue_tracker": "https://github.com/Figurix123/Zigma-980-Free-Home-Assistant-Integration/issues",
+  "codeowners": ["@Figurix123"],
+  "config_flow": true,
+  "iot_class": "local_polling",
+  "integration_type": "device",
+  "requirements": []
+}
