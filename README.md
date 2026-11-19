@@ -8,10 +8,10 @@ Local Home Assistant integration for Zigma Spark 980 Free robots running the v1.
 - Status polling every 10 seconds.
 - Vacuum controls plus explicit Clean, Resume, Pause, and Dock buttons.
 - Battery, cleaning time, raw cleaning-area value, native status, error, and telemetry freshness sensors.
-- An on-demand map camera with the cached path and dock marker. Map requests are rate-limited with a 20-second image cache.
+- A near-live map camera with the robot pose, current 360-degree laser returns, path, and dock marker. It requests `/api/laser` once per second and refreshes `/api/status` plus `/api/map` every 2.5 seconds, matching the robot website's cadence. Home Assistant serves the frames as a one-frame-per-second MJPEG-style image stream.
 - A schedules diagnostic sensor and switches to enable or disable existing clean, dock, and song schedules. Schedule metadata refreshes every five minutes.
 
-The command API confirms that a command was queued; it does not confirm that the robot physically completed it. The cleaning-area sensor intentionally has no unit because the API's native area unit has not been verified. Map cells are shown as a snapshot; their occupancy meaning, age, and coordinate resolution are not fully specified by the API. This is not a continuous video stream. Schedule switches only enable or disable an existing supported schedule; they do not run it immediately or edit its time.
+The command API confirms that a command was queued; it does not confirm that the robot physically completed it. The cleaning-area sensor intentionally has no unit because the API's native area unit has not been verified. Map cells use the same palette as the robot website; their physical occupancy meaning is not fully specified by the API. Laser points and robot pose are drawn only when the live pose matches the current map identity, dimensions, and origin. This is a near-live image feed assembled from API snapshots, not HLS/WebRTC video. Schedule switches only enable or disable an existing supported schedule; they do not run it immediately or edit its time.
 
 ## Install with HACS
 
