@@ -10,7 +10,7 @@ views:
     path: overview
     icon: mdi:robot-vacuum
     type: sections
-    max_columns: 3
+    max_columns: 2
     badges:
       - type: entity
         entity: vacuum.replace_me_vacuum
@@ -30,7 +30,6 @@ views:
         show_state: true
     sections:
       - type: grid
-        column_span: 2
         cards:
           - type: heading
             heading: Live-Karte
@@ -39,36 +38,61 @@ views:
           - type: picture-elements
             camera_image: camera.replace_me_map
             camera_view: live
+            aspect_ratio: "164.7%"
             dark_mode_filter: "invert(0.92) hue-rotate(180deg)"
             grid_options:
               columns: full
-              rows: 11
+              rows: auto
             elements:
-              - type: icon
-                icon: mdi:pause-circle-outline
-                title: Pause
+              - type: custom:button-card
+                entity: button.replace_me_pause
+                name: Pause
+                icon: mdi:pause
+                show_icon: true
+                show_name: true
+                show_state: false
                 tap_action:
                   action: perform-action
                   perform_action: button.press
                   target:
                     entity_id: button.replace_me_pause
+                styles:
+                  card:
+                    - width: 96px
+                    - height: 40px
+                    - padding: 0 10px
+                    - border-radius: 22px
+                    - border: 1px solid rgba(255, 255, 255, 0.20)
+                    - background: rgba(24, 32, 40, 0.90)
+                    - box-shadow: 0 4px 14px rgba(0, 0, 0, 0.20)
+                  grid:
+                    - grid-template-areas: '"i n"'
+                    - grid-template-columns: 20px 1fr
+                    - grid-template-rows: 1fr
+                    - column-gap: 5px
+                    - align-items: center
+                  icon:
+                    - width: 18px
+                    - color: "#ffd27a"
+                  name:
+                    - justify-self: center
+                    - color: white
+                    - font-size: 12px
+                    - font-weight: 600
                 style:
-                  top: 14px
-                  right: 64px
+                  top: 12px
+                  right: 114px
                   left: auto
                   transform: none
-                  width: 44px
-                  height: 44px
-                  display: flex
-                  align-items: center
-                  justify-content: center
-                  border-radius: 50%
-                  background: rgba(20, 28, 34, 0.82)
-                  color: white
-                  --mdc-icon-size: 25px
-              - type: icon
+                  width: 96px
+                  height: 40px
+              - type: custom:button-card
+                entity: button.replace_me_dock
+                name: Dock
                 icon: mdi:home-map-marker
-                title: Zur Station
+                show_icon: true
+                show_name: true
+                show_state: false
                 tap_action:
                   action: perform-action
                   perform_action: button.press
@@ -76,20 +100,34 @@ views:
                     entity_id: button.replace_me_dock
                   confirmation:
                     text: Sparky zurück zur Ladestation schicken?
+                styles:
+                  card:
+                    - width: 96px
+                    - height: 40px
+                    - padding: 0 10px
+                    - border-radius: 22px
+                    - border: 1px solid rgba(255, 255, 255, 0.20)
+                    - background: rgba(24, 32, 40, 0.90)
+                    - box-shadow: 0 4px 14px rgba(0, 0, 0, 0.20)
+                  grid:
+                    - grid-template-areas: '"i n"'
+                    - grid-template-columns: 20px 1fr
+                    - grid-template-rows: 1fr
+                    - column-gap: 5px
+                    - align-items: center
+                  icon:
+                    - width: 18px
+                    - color: "#b4e7d4"
+                  name:
+                    - justify-self: center
+                    - color: white
+                    - font-size: 12px
+                    - font-weight: 600
                 style:
-                  top: 14px
-                  right: 14px
+                  top: 12px
+                  right: 12px
                   left: auto
                   transform: none
-                  width: 44px
-                  height: 44px
-                  display: flex
-                  align-items: center
-                  justify-content: center
-                  border-radius: 50%
-                  background: rgba(20, 28, 34, 0.82)
-                  color: white
-                  --mdc-icon-size: 25px
 
       - type: grid
         cards:
