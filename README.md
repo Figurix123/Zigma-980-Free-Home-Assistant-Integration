@@ -6,7 +6,7 @@ Local Home Assistant integration for Zigma Spark 980 Free robots running the v1.
 
 - Local HTTP connection to the robot on port `8765` using its web access key.
 - Status polling every 10 seconds.
-- Vacuum controls for start, pause, and return to dock.
+- Vacuum controls plus explicit Clean, Resume, Pause, and Dock buttons.
 - Battery, cleaning time, raw cleaning-area value, native status, error, and telemetry freshness sensors.
 
 The command API confirms that a command was queued; it does not confirm that the robot physically completed it. The cleaning-area sensor intentionally has no unit because the API's native area unit has not been verified. Maps and LiDAR are not polled.

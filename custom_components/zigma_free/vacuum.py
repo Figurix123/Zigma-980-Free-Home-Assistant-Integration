@@ -40,6 +40,10 @@ class ZigmaVacuum(ZigmaEntity, StateVacuumEntity):
         | VacuumEntityFeature.RETURN_HOME
     )
 
+    def __init__(self, coordinator, host: str, port: int) -> None:
+        super().__init__(coordinator, host, port)
+        self._attr_unique_id = f"{host}:{port}_vacuum"
+
     @property
     def activity(self) -> VacuumActivity | None:
         """Translate native state strings conservatively."""
