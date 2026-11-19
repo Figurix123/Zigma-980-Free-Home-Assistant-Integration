@@ -28,12 +28,12 @@ This is a custom HACS repository; it is not part of the default HACS catalog.
 
 The repository includes a reusable [map-first dashboard template](dashboards/sparky-dashboard.yaml). HACS installs the integration, but Home Assistant dashboards are stored separately and are **not installed automatically**.
 
-1. Install the [`button-card` Lovelace card](https://github.com/custom-cards/button-card) through HACS or your Home Assistant frontend marketplace.
+1. Install the [`button-card`](https://github.com/custom-cards/button-card) and [`auto-entities`](https://github.com/thomasloven/lovelace-auto-entities) Lovelace cards through HACS or your Home Assistant frontend marketplace.
 2. Find the entity IDs created for your robot under **Settings → Devices & services → Zigma Free**.
 3. Create a new dashboard, open its raw configuration editor, and paste in `dashboards/sparky-dashboard.yaml`.
 4. Replace every `replace_me` entity ID with the matching ID from your installation, then save.
 
-The template uses standard Home Assistant cards for the map, status, battery, suction selector, diagnostics, and schedules. It uses `button-card` for the four large, colored actions; starting a clean and docking both ask for confirmation. The dashboard can be restyled without changing the integration itself.
+The template uses standard Home Assistant cards for the map, status, battery, suction selector, and diagnostics. It uses `button-card` for the four large, colored actions; starting a clean and docking both ask for confirmation. `auto-entities` adds schedule switches automatically when the robot exposes schedules, so the dashboard does not need a hard-coded entity ID for each one. The dashboard can be restyled without changing the integration itself.
 
 ## Live map
 
