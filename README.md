@@ -35,7 +35,7 @@ The repository includes a reusable [map-first dashboard template](dashboards/spa
 
 The template uses standard Home Assistant cards for the map, status, battery, suction selector, and diagnostics. Its map overlays Pause and Dock controls; the map darkens automatically when Home Assistant is in dark mode. `button-card` styles the four large, colored actions; starting a clean and docking both ask for confirmation. `auto-entities` adds schedule switches automatically when the robot exposes schedules, so the dashboard does not need a hard-coded entity ID for each one. The dashboard can be restyled without changing the integration itself.
 
-For a compact live map on an existing dashboard, copy the [Sparky live section](dashboards/sparky-live-section.yaml) into that dashboard view's `sections` list. It appears while the vacuum is cleaning or returning to its dock and overlays Pause and Dock buttons on the camera image.
+For a live map on an existing dashboard, copy the [Sparky live section](dashboards/sparky-live-section.yaml) into that dashboard view's `sections` list. It appears while the vacuum is cleaning or returning to its dock, overlays clearly labeled Pause and Dock buttons on the map, and groups status, battery, and cleaning time beside it on wider screens. The map keeps the generated PNG's portrait aspect ratio so the full floor plan stays visible as the dashboard changes width.
 
 ## Live map
 
