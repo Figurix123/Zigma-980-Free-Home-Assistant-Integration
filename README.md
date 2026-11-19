@@ -7,11 +7,12 @@ Local Home Assistant integration for Zigma Spark 980 Free robots running the v1.
 - Local HTTP connection to the robot on port `8765` using its web access key.
 - Status polling every 10 seconds.
 - Vacuum controls plus explicit Clean, Resume, Pause, and Dock buttons.
+- A suction power selector (Quiet, Normal, Full) used by the next full clean, with its choice saved in Home Assistant.
 - Battery, cleaning time, raw cleaning-area value, native status, error, and telemetry freshness sensors.
 - A near-live map camera with the robot pose, current 360-degree laser returns, path, and dock marker. It requests `/api/laser` once per second and refreshes `/api/status` plus `/api/map` every 2.5 seconds, matching the robot website's cadence. Home Assistant serves the frames as a one-frame-per-second MJPEG-style image stream.
 - A schedules diagnostic sensor and switches to enable or disable existing clean, dock, and song schedules. Schedule metadata refreshes every five minutes.
 
-The command API confirms that a command was queued; it does not confirm that the robot physically completed it. The cleaning-area sensor intentionally has no unit because the API's native area unit has not been verified. Map cells use the same palette as the robot website; their physical occupancy meaning is not fully specified by the API. Laser points and robot pose are drawn only when the live pose matches the current map identity, dimensions, and origin. This is a near-live image feed assembled from API snapshots, not HLS/WebRTC video. Schedule switches only enable or disable an existing supported schedule; they do not run it immediately or edit its time.
+The command API confirms that a command was queued; it does not confirm that the robot physically completed it. The cleaning-area sensor intentionally has no unit because the API's native area unit has not been verified. Map cells use the same palette as the robot website; their physical occupancy meaning is not fully specified by the API. Laser points and robot pose are drawn only when the live pose matches the current map identity, dimensions, and origin. This is a near-live image feed assembled from API snapshots, not HLS/WebRTC video. The API exposes suction power values 1–3 with a full-clean command; the selector sets the level for the next full clean and cannot change power mid-clean. Schedule switches only enable or disable an existing supported schedule; they do not run it immediately or edit its time.
 
 ## Install with HACS
 
@@ -28,7 +29,7 @@ This repository is a custom HACS repository and is not part of the default HACS 
 - The robot's local HTTP agent must be reachable from the Home Assistant host.
 - API traffic uses plain HTTP on the local network; keep the access key private and do not expose port `8765` to the internet.
 - API behavior was derived from the v1.1-rc10 release and matching source tag. This integration has not yet been runtime-tested against a physical robot.
-- LiDAR, room cleaning, area cleaning, forbidden zones, locate, stop, schedule editing, and live fan-speed changes are not implemented.
+- LiDAR controls, room cleaning, area cleaning, forbidden zones, locate, stop, schedule editing, and changing suction power during an active clean are not implemented.
 
 ## Source
 
