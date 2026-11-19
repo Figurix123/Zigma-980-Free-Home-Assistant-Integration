@@ -10,7 +10,15 @@ from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .api import ZigmaLocalApi
-from .const import CONF_ACCESS_KEY, CONF_HOST, CONF_PORT, DOMAIN, PLATFORMS
+from .const import (
+    CONF_ACCESS_KEY,
+    CONF_FAN_POWER,
+    CONF_HOST,
+    CONF_PORT,
+    DEFAULT_FAN_POWER,
+    DOMAIN,
+    PLATFORMS,
+)
 from .coordinator import ZigmaSchedulesCoordinator, ZigmaStatusCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -25,6 +33,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         str(entry.data[CONF_ACCESS_KEY]),
     )
     coordinator = ZigmaStatusCoordinator(hass, api)
+    configured_fan_power = entry.options.get(CONF_FAN_POWER, DEFAULT_FAN_POWER)
+    coordinator.fan_power = (
+        configured_fan_power
+        if isinstance(configured_fan_power, int)
+        and not isinstance(configured_fan_power, bool)
+        and configured_fan_power in (1, 2, 3)
+        else DEFAULT_FAN_POWER
+    )
     try:
         await coordinator.async_config_entry_first_refresh()
     except ConfigEntryAuthFailed:
