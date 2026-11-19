@@ -146,7 +146,10 @@ class ZigmaMapCamera(ZigmaEntity, Camera):
     _attr_content_type = "image/png"
 
     def __init__(self, coordinator: ZigmaStatusCoordinator, host: str, port: int) -> None:
-        super().__init__(coordinator, host, port)
+        # Camera is a sibling of CoordinatorEntity in the MRO, so its
+        # constructor is not reached through ZigmaEntity.__init__.
+        ZigmaEntity.__init__(self, coordinator, host, port)
+        Camera.__init__(self)
         self._attr_unique_id = f"{host}:{port}_map"
         self._cached_png: bytes | None = None
         self._cached_at = 0.0
