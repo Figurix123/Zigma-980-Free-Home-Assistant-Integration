@@ -25,7 +25,6 @@ _CELL_COLORS: tuple[tuple[int, int, int] | None, ...] = (
     None,
 )
 _BACKGROUND_COLOR = (242, 243, 237)
-_BACKGROUND_DOT_COLOR = (188, 197, 181)
 _PATH_COLOR = (180, 161, 129)
 _DOCK_COLOR = (129, 149, 114)
 _NAV_ROBOT_COLOR = (72, 123, 152)
@@ -190,17 +189,8 @@ def _fill_rect(
 
 
 def _paint_background(pixels: bytearray, width: int, height: int) -> None:
-    """Paint the light, subtly dotted background used by the robot website."""
+    """Fill unknown map pixels with a sentinel color encoded as transparency."""
     pixels[:] = bytes(_BACKGROUND_COLOR) * (width * height)
-    dot = _BACKGROUND_DOT_COLOR
-    spacing = 26 * _IMAGE_SCALE
-    radius = max(1, _IMAGE_SCALE)
-    for y in range(spacing // 2, height, spacing):
-        for x in range(spacing // 2, width, spacing):
-            for dy in range(-radius, radius + 1):
-                for dx in range(-radius, radius + 1):
-                    if dx * dx + dy * dy <= radius * radius:
-                        _blend_point(pixels, width, height, x + dx, y + dy, dot, 72)
 
 
 def _paint_rounded_rect(
@@ -428,15 +418,15 @@ def render_map_png(
     if span_x <= 0 or span_y <= 0 or max(span_x, span_y) > _MAX_COORDINATE:
         raise ValueError("Map overlays are outside the supported coordinate range")
 
-    image_width = image_height = _CANVAS_SIZE * _IMAGE_SCALE
+    scale = (_CANVAS_SIZE - 2 * _CANVAS_PADDING) / max(span_x, span_y)
+    canvas_width = math.ceil(span_x * scale + 2 * _CANVAS_PADDING)
+    canvas_height = math.ceil(span_y * scale + 2 * _CANVAS_PADDING)
+    image_width = canvas_width * _IMAGE_SCALE
+    image_height = canvas_height * _IMAGE_SCALE
     pixels = bytearray(image_width * image_height * 3)
     _paint_background(pixels, image_width, image_height)
-    scale = min(
-        (_CANVAS_SIZE - 2 * _CANVAS_PADDING) / span_x,
-        (_CANVAS_SIZE - 2 * _CANVAS_PADDING) / span_y,
-    )
-    left = (_CANVAS_SIZE - span_x * scale) / 2 - min_x * scale
-    top = (_CANVAS_SIZE - span_y * scale) / 2 - min_y * scale
+    left = (canvas_width - span_x * scale) / 2 - min_x * scale
+    top = (canvas_height - span_y * scale) / 2 - min_y * scale
 
     def to_pixel(x: float, y: float) -> tuple[float, float]:
         return ((left + x * scale) * _IMAGE_SCALE, (top + y * scale) * _IMAGE_SCALE)
@@ -524,11 +514,24 @@ def render_map_png(
             heading_y = round(robot_y + heading_length * math.sin(navigation["heading"]))
             _paint_line(pixels, image_width, image_height, center_x, center_y, heading_x, heading_y, _NAV_ROBOT_COLOR)
 
+    # Keep the rendered floor and overlays opaque, but let the map card's own
+    # background show through unknown cells and the small frame around the map.
+    rgba = bytearray(image_width * image_height * 4)
+    background = bytes(_BACKGROUND_COLOR)
+    for source_offset in range(0, len(pixels), 3):
+        target_offset = (source_offset // 3) * 4
+        color = pixels[source_offset : source_offset + 3]
+        if color == background:
+            rgba[target_offset : target_offset + 4] = b"\x00\x00\x00\x00"
+        else:
+            rgba[target_offset : target_offset + 3] = color
+            rgba[target_offset + 3] = 255
+
     scanlines = b"".join(
-        b"\x00" + pixels[row * image_width * 3 : (row + 1) * image_width * 3]
+        b"\x00" + rgba[row * image_width * 4 : (row + 1) * image_width * 4]
         for row in range(image_height)
     )
-    header = struct.pack(">2I5B", image_width, image_height, 8, 2, 0, 0, 0)
+    header = struct.pack(">2I5B", image_width, image_height, 8, 6, 0, 0, 0)
     return (
         b"\x89PNG\r\n\x1a\n"
         + _png_chunk(b"IHDR", header)
