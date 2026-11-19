@@ -263,6 +263,19 @@ views:
             entity: sensor.replace_me_schedules
             name: Auf dem Roboter gespeichert
             icon: mdi:calendar-check-outline
+          - type: custom:auto-entities
+            show_empty: false
+            card:
+              type: entities
+              title: Zeitpläne aktivieren oder pausieren
+              show_header_toggle: false
+            filter:
+              include:
+                - integration: zigma_free
+                  domain: switch
+            sort:
+              method: name
+              ignore_case: true
           - type: markdown
             entity_id: sensor.replace_me_schedules
             text_only: true
