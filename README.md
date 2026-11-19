@@ -12,7 +12,7 @@ A local Home Assistant integration for the Zigma Spark 980 Free running the **v1
 | Check battery, status, errors, and telemetry freshness | Native sensors |
 | Inspect or enable supported robot schedules | Schedule sensor and switches for schedules exposed by the API |
 
-The included **Sparky** dashboard uses a responsive, map-first layout. It puts operating status and battery level above the map, with color-coded cleaning controls, suction selection, diagnostics, and schedule details alongside it.
+The included dashboard has a map-first **Sparky** view for live status and controls, plus a **Details** view for diagnostics and schedules. This keeps the frequent actions together and puts secondary information one tap away.
 
 ## Install
 
