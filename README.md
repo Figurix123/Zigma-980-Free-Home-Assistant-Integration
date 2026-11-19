@@ -24,6 +24,17 @@ The included **Sparky** dashboard uses a responsive, map-first layout. It puts o
 
 This is a custom HACS repository; it is not part of the default HACS catalog.
 
+## Optional dashboard
+
+The repository includes a reusable [map-first dashboard template](dashboards/sparky-dashboard.yaml). HACS installs the integration, but Home Assistant dashboards are stored separately and are **not installed automatically**.
+
+1. Install the [`button-card` Lovelace card](https://github.com/custom-cards/button-card) through HACS or your Home Assistant frontend marketplace.
+2. Find the entity IDs created for your robot under **Settings → Devices & services → Zigma Free**.
+3. Create a new dashboard, open its raw configuration editor, and paste in `dashboards/sparky-dashboard.yaml`.
+4. Replace every `replace_me` entity ID with the matching ID from your installation, then save.
+
+The template uses standard Home Assistant cards for the map, status, battery, suction selector, diagnostics, and schedules. It uses `button-card` for the four large, colored actions; starting a clean and docking both ask for confirmation. The dashboard can be restyled without changing the integration itself.
+
 ## Live map
 
 The camera follows the robot website's clean map style: a complete, centered floor plan, a fine dashed route, and clear dock and robot markers. Its frame expands to include reported route or robot coordinates outside the map grid. Fresh laser data is used to position the robot when it aligns with the active map; raw laser returns are not drawn over the floor plan.
