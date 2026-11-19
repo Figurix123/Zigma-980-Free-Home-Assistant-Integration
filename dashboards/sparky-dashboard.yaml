@@ -234,6 +234,12 @@ views:
             grid_options:
               columns: full
 
+  - title: Details
+    path: details
+    icon: mdi:chart-box-outline
+    type: sections
+    max_columns: 2
+    sections:
       - type: grid
         cards:
           - type: heading
